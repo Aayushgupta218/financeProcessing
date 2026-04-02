@@ -24,3 +24,7 @@ spring:
     time-zone: UTC
     serialization:
       write-dates-as-timestamps: false
+
+  jwt:
+    secret: finance_super_secret_key_must_be_at_least_256_bits_long_for_hs256
+    expiration: 86400000   # 24 hours
