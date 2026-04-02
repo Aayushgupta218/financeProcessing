@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: financeProcessing
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance_db
+    username: finance_user
+    password: Finance@218
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  jackson:
+    time-zone: UTC
+    serialization:
+      write-dates-as-timestamps: false
