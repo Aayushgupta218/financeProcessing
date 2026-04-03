@@ -12,10 +12,10 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
+    @Value("${spring.jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${spring.jwt.expiration}")
     private long expiration;
 
     // Build the signing key from your secret string
