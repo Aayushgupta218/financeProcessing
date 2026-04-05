@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Getter
 public class UpdateTransactionRequest {
 
-    // All fields optional on update — only patch what's sent
     @Positive(message = "Amount must be positive")
     @Digits(integer = 13, fraction = 2)
     private BigDecimal amount;

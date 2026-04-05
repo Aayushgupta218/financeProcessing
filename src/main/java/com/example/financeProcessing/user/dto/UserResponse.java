@@ -14,7 +14,6 @@ public class UserResponse {
     private final Role role;
     private final boolean active;
 
-    // Static factory — converts entity to DTO cleanly
     public static UserResponse from(User user) {
         return new UserResponse(user);
     }

@@ -1,6 +1,5 @@
 package com.example.financeProcessing.user;
 
-import com.example.financeProcessing.common.enums.Role;
 import com.example.financeProcessing.common.response.ApiResponse;
 import com.example.financeProcessing.user.dto.UpdateRoleRequest;
 import com.example.financeProcessing.user.dto.UpdateStatusRequest;
@@ -21,14 +20,12 @@ public class UserController {
 
     private final UserService userService;
 
-    // Only ADMIN can list all users
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
         return ResponseEntity.ok(ApiResponse.success(userService.getAllUsers()));
     }
 
-    // Only ADMIN can change someone's role
     @PutMapping("/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> updateRole(
@@ -38,7 +35,6 @@ public class UserController {
                 "Role updated", userService.updateRole(id, request.getRole())));
     }
 
-    // Only ADMIN can activate/deactivate accounts
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> updateStatus(

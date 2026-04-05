@@ -22,18 +22,14 @@ public class TransactionService {
     private final UserRepository        userRepository;
     private final AuditRepository       auditRepository;
 
-    // ── READ ──────────────────────────────────────────────────────────────────
 
     public Page<TransactionResponse> getAll(TransactionFilterRequest filter,
                                             int page, int size, String sortBy) {
 
-        // Build the dynamic WHERE clause from whatever filters were passed
         Specification<Transaction> spec = TransactionSpecification.withFilters(filter);
 
-        // Pageable carries: which page, how many rows, sort column + direction
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
 
-        // One call — filtering + pagination + sorting all handled by JPA
         return transactionRepository.findAll(spec, pageable)
                 .map(TransactionResponse::from);
     }
@@ -42,15 +38,12 @@ public class TransactionService {
         return TransactionResponse.from(findOrThrow(id));
     }
 
-    // ── CREATE ────────────────────────────────────────────────────────────────
 
     public TransactionResponse create(TransactionRequest request) {
-        // Resolve the current user from SecurityContext
         UUID actorId = SecurityUtils.getCurrentUserId();
         User actor   = userRepository.findById(actorId)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
 
-        // Find existing category or create a new one — keeps category table normalized
         Category category = categoryRepository
                 .findByNameIgnoreCase(request.getCategory())
                 .orElseGet(() -> categoryRepository.save(
@@ -68,18 +61,15 @@ public class TransactionService {
 
         Transaction saved = transactionRepository.save(transaction);
 
-        // Write audit trail
         audit(actor, "CREATE_TRANSACTION", "Transaction", saved.getId().toString());
 
         return TransactionResponse.from(saved);
     }
 
-    // ── UPDATE ────────────────────────────────────────────────────────────────
 
     public TransactionResponse update(UUID id, UpdateTransactionRequest request) {
         Transaction transaction = findOrThrow(id);
 
-        // Only update fields that were actually sent — null = keep existing value
         if (request.getAmount() != null) {
             transaction.setAmount(request.getAmount());
         }
@@ -110,12 +100,10 @@ public class TransactionService {
         return TransactionResponse.from(saved);
     }
 
-    // ── DELETE (soft) ─────────────────────────────────────────────────────────
 
     public void delete(UUID id) {
         Transaction transaction = findOrThrow(id);
 
-        // Soft delete — sets is_deleted = true, @Where filters it out automatically
         transaction.setDeleted(true);
         transactionRepository.save(transaction);
 
@@ -124,7 +112,7 @@ public class TransactionService {
         audit(actor, "DELETE_TRANSACTION", "Transaction", id.toString());
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────────
+
 
     private Transaction findOrThrow(UUID id) {
         return transactionRepository.findById(id)

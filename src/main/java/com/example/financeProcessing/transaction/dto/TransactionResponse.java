@@ -19,7 +19,6 @@ public class TransactionResponse {
     private final LocalDate transactionDate;
     private final LocalDateTime createdAt;
 
-    // Static factory — clean entity → DTO conversion
     public static TransactionResponse from(Transaction t) {
         return new TransactionResponse(t);
     }

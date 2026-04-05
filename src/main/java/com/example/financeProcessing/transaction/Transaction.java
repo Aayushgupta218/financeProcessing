@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "transactions")
-//@Where(clause = "is_deleted = false")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor

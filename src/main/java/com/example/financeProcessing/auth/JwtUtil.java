@@ -23,19 +23,17 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Called after successful login — generates and returns the token string
     public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getId().toString())        // user UUID as subject
-                .claim("email", user.getEmail())            // custom claim
-                .claim("role", user.getRole().name())       // role claim — used by SecurityContext
+                .setSubject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Called by the filter on every request — parses and validates the token
     public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -44,7 +42,6 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // Convenience methods used by the filter
     public String extractUserId(String token) {
         return extractAllClaims(token).getSubject();
     }
@@ -55,7 +52,7 @@ public class JwtUtil {
 
     public boolean isTokenValid(String token) {
         try {
-            extractAllClaims(token); // throws if expired
+            extractAllClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

@@ -8,7 +8,6 @@ import java.util.UUID;
 public class SecurityUtils {
 
     // Returns the UUID of the currently authenticated user
-    // The JwtAuthFilter stored the user UUID as the principal in Step 2
     public static UUID getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
@@ -17,7 +16,7 @@ public class SecurityUtils {
         return UUID.fromString((String) auth.getPrincipal());
     }
 
-    // Returns the role string, e.g. "ROLE_ADMIN"
+    // Returns the role string
     public static String getCurrentUserRole() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities().iterator().next().getAuthority();

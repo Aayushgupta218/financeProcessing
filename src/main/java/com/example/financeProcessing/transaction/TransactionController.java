@@ -19,7 +19,6 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
-    // ALL roles can read — VIEWER, ANALYST, ADMIN
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<Page<TransactionResponse>>> getAll(
@@ -28,8 +27,6 @@ public class TransactionController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "transactionDate") String sortBy) {
 
-        // @ModelAttribute binds ?type=INCOME&category=Food directly to the filter object
-        // No manual request.getParameter() needed
         Page<TransactionResponse> result = transactionService.getAll(filter, page, size, sortBy);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
@@ -40,7 +37,6 @@ public class TransactionController {
         return ResponseEntity.ok(ApiResponse.success(transactionService.getById(id)));
     }
 
-    // Only ANALYST and ADMIN can create
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'ANALYST')")
     public ResponseEntity<ApiResponse<TransactionResponse>> create(
@@ -52,7 +48,6 @@ public class TransactionController {
                 .body(ApiResponse.success("Transaction created", response));
     }
 
-    // Only ANALYST and ADMIN can update
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ANALYST')")
     public ResponseEntity<ApiResponse<TransactionResponse>> update(
@@ -63,7 +58,6 @@ public class TransactionController {
                 ApiResponse.success("Transaction updated", transactionService.update(id, request)));
     }
 
-    // Only ADMIN can delete
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {

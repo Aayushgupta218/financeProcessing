@@ -15,7 +15,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
-    // Handles @PreAuthorize failures — role not permitted
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity
@@ -23,7 +22,6 @@ public class ExceptionsHandler {
                 .body(ApiResponse.error("Access denied: insufficient permissions"));
     }
 
-    // Handles @Valid failures on request bodies
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidation(
             MethodArgumentNotValidException ex) {
@@ -37,7 +35,6 @@ public class ExceptionsHandler {
                 .body(ApiResponse.error("Validation failed"));
     }
 
-    // Handles business logic exceptions (email taken, user not found, etc.)
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntime(RuntimeException ex) {
         return ResponseEntity
@@ -45,7 +42,6 @@ public class ExceptionsHandler {
                 .body(ApiResponse.error(ex.getMessage()));
     }
 
-    // Catch-all safety
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneral(Exception ex) {
         return ResponseEntity
